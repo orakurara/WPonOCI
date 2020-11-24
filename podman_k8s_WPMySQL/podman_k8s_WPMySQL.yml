@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Pod
 metadata:
+  name: opc_wp
   labels:
     app: opc_wp
-  name: opc_wp
 spec:
   containers:
   - name: wordpress
