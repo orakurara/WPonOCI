@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: wordpress
+ labels:
+    app: wordpress
+spec:
+ replicas: 2
+ selector:
+    matchLabels:
+      app: wordpress
+ strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+ template:
+   metadata:
+     labels:
+       app: wordpress 
+   spec:
+     containers:
+       - name: wordpress
+         image: docker.io/library/wordpress:latest
+         imagePullPolicy: Always
+         env:
+           - name: PATH
+             value: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+           - name: WORDPRESS_DB_PASSWORD
+             valueFrom:
+               secretKeyRef:
+                 name: "mdssecret"
+                 key: password
+           - name: WORDPRESS_DB_USER
+             valueFrom:
+               secretKeyRef:
+                 name: "mdssecret"
+                 key: username
+           - name: WORDPRESS_DB_NAME
+             value: wpdb
+           - name: WORDPRESS_DB_HOST
+             value: mds-service:3306
+         ports:
+           - containerPort: 80
+             name: wordpress
+             protocol: TCP
+           - containerPort: 3306
+             name: mysql
+             protocol: TCP
+         volumeMounts:
+           - mountPath: /var/www/html
+             name: wspd
+     volumes:
+        - name: wspd
+          persistentVolumeClaim:
+            claimName: wspvc
