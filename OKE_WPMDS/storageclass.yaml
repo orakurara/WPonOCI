@@ -1,0 +1,7 @@
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: oci-fss
+provisioner: oracle.com/oci-fss
+parameters:
+  mntTargetId: ocid1.mounttarget.oc1.ap_tokyo_1.aaaaaa4np2sq62aqnzzhillqojxwiotboawxi33lpfxs2mjnmfsc2mia
